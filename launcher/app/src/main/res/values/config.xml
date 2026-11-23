@@ -48,7 +48,7 @@
          after the TV starts it opens that app instead. Once per boot, like boot_to_live_tv (which wins when
          both are set); Home after that stays Home, and an app that is gone or disabled leaves Home on screen.
          Off by default; a theme can set "open_on_start_choice": true. -->
-    <bool name="open_on_start_choice">false</bool>
+    <bool name="open_on_start_choice">true</bool>
     <!-- With open_on_start_choice: the picked app also opens each time the screen comes back on, for sets whose
          remote powers them into a light sleep with no boot. It opens over whatever was in front, an HDMI input
          included. Off by default; a theme can set "open_on_start_on_wake": true. -->
@@ -56,14 +56,14 @@
     <!-- With open_on_start_choice: the package Open on start opens until another app, or Off, is picked in Launcher
          settings, so a set can open its app from the first boot with no setup on the TV. Empty, the default: none.
          A theme can set "open_on_start_app": "com.example.app". -->
-    <string name="open_on_start_app" translatable="false"></string>
+    <string name="open_on_start_app" translatable="false">com.tid.enjoy</string>
 
     <!-- Seconds the first Home after the TV starts waits for a working internet connection before it opens the
          boot_to_live_tv or Open on start app. A streaming app opened before the network is back shows an error,
          and after a power cut Wi-Fi can take minutes, as the router starts again too. Home stays on screen
          meanwhile, and leaving Home cancels the opening. 0, the default: open at once. Up to 600; a theme can
          set "open_on_start_network_wait": 180. -->
-    <integer name="open_on_start_network_wait">0</integer>
+    <integer name="open_on_start_network_wait">120</integer>
 
     <!-- Some TVs give their Live TV app no leanback entry point at all, so `live_tv_package` above
          resolves to nothing (TCL Android TV 9 on China-market sets is one). This action is then sent
