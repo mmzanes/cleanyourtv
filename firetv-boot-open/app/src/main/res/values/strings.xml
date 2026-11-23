@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Abrir Vivo TV</string>
+    <!-- The app opened after each boot. Check its name on the TV with: adb shell pm list packages | grep -i enjoy -->
+    <string name="target_package" translatable="false">com.tid.enjoy</string>
+    <string name="not_found">App não encontrado: %1$s</string>
+</resources>
