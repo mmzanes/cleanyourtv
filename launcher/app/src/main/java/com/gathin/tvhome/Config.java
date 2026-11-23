@@ -112,6 +112,8 @@ final class Config {
     final int openOnStartNetworkWait;
     /** The Open on start app also opens when the screen comes back on (config.xml, open_on_start_on_wake). */
     final boolean openOnStartOnWake;
+    /** The Open on start app until one is picked in Launcher settings; empty for none (open_on_start_app). */
+    final String openOnStartApp;
     /** The focused dock app's name in large type above the dock (config.xml, dock_title). */
     final boolean dockTitle;
     /** The dock as its own row: band, no names, parked low (config.xml dock_row). false: one plain grid. */
@@ -298,7 +300,7 @@ final class Config {
                    boolean keyFilter, boolean dockGlass, String glowStyle, boolean wallpaperCaptions,
                    boolean handleViewInputs, boolean tileMenu, boolean dockEvenPadding, boolean dockBand, boolean cinematicDots, boolean cinematicWhiteFocus, boolean wifiStatusColor, int cinematicScrim, int cinematicArt,
                    Map<String, Set<String>> wallpaperMoods, boolean gamepadPassthrough, boolean consumeVolumeKeys, boolean volumePausesFilter, boolean homeIgnoreChannelKeys, boolean powerOnHome, boolean homeLongPressHome, boolean wifiStatusWarnings, List<String> topBarApps, boolean showGreeting, boolean headerWhite, boolean clockWallpaper, int clockWallpaperDim, boolean clockGlow, String glassStyle, boolean singleRow, boolean dockBandAll, boolean lunarDate, int lunarUtcOffset, boolean dateBelowClock, boolean vpnPill, String locale, boolean powerOnHomeAlways, boolean inputsConnectedOnly, boolean inputsCecStateOnly,
-                   int openOnStartNetworkWait, boolean openOnStartOnWake, boolean iconOnlyVpn, String clockFormat, boolean backOpensClock, boolean glowSnap,
+                   int openOnStartNetworkWait, boolean openOnStartOnWake, String openOnStartApp, boolean iconOnlyVpn, String clockFormat, boolean backOpensClock, boolean glowSnap,
                    boolean settingsKeyClearTask) {
         this.handleViewInputs = handleViewInputs;
         this.tileMenu = tileMenu;
@@ -406,6 +408,7 @@ final class Config {
         this.inputsCecStateOnly = inputsCecStateOnly;
         this.openOnStartNetworkWait = openOnStartNetworkWait;
         this.openOnStartOnWake = openOnStartOnWake;
+        this.openOnStartApp = openOnStartApp;
         this.clockFormat = clockFormat;
         this.wifiStatusWarnings = wifiStatusWarnings;
         this.topBarApps = Collections.unmodifiableList(topBarApps);
@@ -473,6 +476,7 @@ final class Config {
         boolean openOnStartChoice = res.getBoolean(R.bool.open_on_start_choice);
         int openOnStartNetworkWait = res.getInteger(R.integer.open_on_start_network_wait);
         boolean openOnStartOnWake = res.getBoolean(R.bool.open_on_start_on_wake);
+        String openOnStartApp = res.getString(R.string.open_on_start_app).trim();
         boolean dockTitle = res.getBoolean(R.bool.dock_title);
         boolean dockRow = res.getBoolean(R.bool.dock_row);
         boolean topMenu = res.getBoolean(R.bool.top_menu);
@@ -590,6 +594,7 @@ final class Config {
             openOnStartChoice = bool(json, "open_on_start_choice", openOnStartChoice);
             openOnStartNetworkWait = integer(json, "open_on_start_network_wait", openOnStartNetworkWait, 0, 600);
             openOnStartOnWake = bool(json, "open_on_start_on_wake", openOnStartOnWake);
+            openOnStartApp = string(json, "open_on_start_app", openOnStartApp);
             dockTitle = bool(json, "dock_title", dockTitle);
             dockRow = bool(json, "dock_row", dockRow);
             topMenu = bool(json, "top_menu", topMenu);
@@ -731,7 +736,7 @@ final class Config {
                 consumeVolumeKeys, volumePausesFilter, homeIgnoreChannelKeys, powerOnHome, homeLongPressHome, wifiStatusWarnings, topBarApps, showGreeting, headerWhite, clockWallpaper,
                 Math.max(0, Math.min(90, clockWallpaperDim)), clockGlow, glassStyle, singleRow && dockRow, dockBandAll, lunar, lunarOffset,
                 dateBelowClock, vpnPill, locale, powerOnHomeAlways, inputsConnectedOnly, inputsCecStateOnly,
-                Math.max(0, Math.min(600, openOnStartNetworkWait)), openOnStartOnWake, iconOnlyVpn, clockFormat, backOpensClock, glowSnap,
+                Math.max(0, Math.min(600, openOnStartNetworkWait)), openOnStartOnWake, openOnStartApp, iconOnlyVpn, clockFormat, backOpensClock, glowSnap,
                 settingsKeyClearTask);
     }
 

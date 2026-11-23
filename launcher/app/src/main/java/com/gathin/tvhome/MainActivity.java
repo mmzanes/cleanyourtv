@@ -285,6 +285,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private long openOnStartWaitMs;
     /** open_on_start_on_wake: wakeReceiver is registered for this activity's life. */
     private boolean openOnStartOnWake;
+    /** open_on_start_app: the Open on start app until one is picked in Launcher settings. */
+    private String openOnStartApp = "";
     private volatile Intent startPending;
     private long startDeadline;
     /** Opens the boot's app once the network is validated (networkCallback posts this) or the wait is over. */
@@ -494,6 +496,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         openOnStartChoice = cfg.openOnStartChoice;
         openOnStartWaitMs = cfg.openOnStartNetworkWait * 1000L;
         openOnStartOnWake = OpenOnStart.onWake(cfg.openOnStartChoice, cfg.openOnStartOnWake);
+        openOnStartApp = cfg.openOnStartApp;
         liveTvAction = cfg.liveTvAction;
         liveTvInputId = cfg.liveTvInputId;
         appLibraryEnabled = cfg.appLibrary;
@@ -3258,11 +3261,17 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      *  low-memory TV the app can push the launcher out of memory, and an apply() still in flight was lost then, so
      *  every Home press opened the app again. */
     private boolean openLiveTvAfterBoot() {
-        String app = openOnStartChoice ? getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE)
-                .getString(OpenOnStart.KEY, "") : "";
+        SharedPreferences choices = getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE);
+        String app = openOnStartChoice ? OpenOnStart.app(choices, openOnStartApp) : "";
         if (!bootToLiveTv && app.isEmpty()) return false;
         int boot = OpenOnStart.boot(this);
         SharedPreferences prefs = getSharedPreferences(OpenOnStart.BOOT_PREFS, MODE_PRIVATE);
+        // open_on_start_app, like a pick, starts from the next boot: the Home right after the install stays Home,
+        // so the install script can confirm it.
+        if (!bootToLiveTv && !choices.contains(OpenOnStart.KEY) && !prefs.contains(OpenOnStart.BOOT_KEY)) {
+            prefs.edit().putInt(OpenOnStart.BOOT_KEY, boot).commit();
+            return false;
+        }
         String target = bootToLiveTv ? liveTvPkg : app;
         if (!OpenOnStart.due(boot, prefs.getInt(OpenOnStart.BOOT_KEY, -1), target, getPackageName())) return false;
         if (!prefs.edit().putInt(OpenOnStart.BOOT_KEY, boot).commit()) return false;
@@ -3278,7 +3287,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     /** open_on_start_on_wake: the remote's power button is a light sleep on some sets, with no boot for
      *  openLiveTvAfterBoot to catch. */
     private void openStartAppOnWake() {
-        String app = getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE).getString(OpenOnStart.KEY, "");
+        String app = OpenOnStart.app(getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE), openOnStartApp);
         if (app.isEmpty() || app.equals(getPackageName())) return;
         Intent i = OpenOnStart.intent(getPackageManager(), app);
         if (i != null) openWhenReady(i);

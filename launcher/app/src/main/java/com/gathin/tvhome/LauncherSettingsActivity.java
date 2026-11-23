@@ -39,6 +39,8 @@ public final class LauncherSettingsActivity extends Activity {
     private TextView advancedChoice;
     private TextView followThemeChoice;
     private TextView openOnStartChoice;
+    /** open_on_start_app: shown as the pick until one is made. */
+    private String openOnStartPreset = "";
     private int columns;
     private int rowsBelowDock;
     private int dockOpacity;
@@ -52,6 +54,7 @@ public final class LauncherSettingsActivity extends Activity {
         setContentView(R.layout.activity_launcher_settings);
         choices = getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE);
         Config config = Config.load(this);
+        openOnStartPreset = config.openOnStartApp;
         View reorderChoice = findViewById(R.id.reorderChoice);
         reorderChoice.setVisibility(config.launcherSettingsButton ? View.VISIBLE : View.GONE);
         reorderChoice.setOnClickListener(v -> {
@@ -234,7 +237,7 @@ public final class LauncherSettingsActivity extends Activity {
         Collections.sort(apps, (a, b) -> a[0].compareToIgnoreCase(b[0]));
         String[] labels = new String[apps.size() + 1];
         labels[0] = getString(R.string.off);
-        String current = choices.getString(OpenOnStart.KEY, "");
+        String current = OpenOnStart.app(choices, openOnStartPreset);
         int checked = 0;
         for (int i = 0; i < apps.size(); i++) {
             labels[i + 1] = apps.get(i)[0];
@@ -244,7 +247,7 @@ public final class LauncherSettingsActivity extends Activity {
                 .setTitle(R.string.open_on_start_label)
                 .setSingleChoiceItems(labels, checked, (dialog, which) -> {
                     dialog.dismiss();
-                    if (which == 0) choices.edit().remove(OpenOnStart.KEY).apply();
+                    if (which == 0) choices.edit().putString(OpenOnStart.KEY, "").apply();   // Off, over open_on_start_app
                     else {
                         OpenOnStart.skipThisBoot(this);
                         choices.edit().putString(OpenOnStart.KEY, apps.get(which - 1)[1]).apply();
@@ -257,7 +260,7 @@ public final class LauncherSettingsActivity extends Activity {
 
     /** The picked app's name, its package when it is gone, or Off. */
     private String openOnStartLabel() {
-        String pkg = choices.getString(OpenOnStart.KEY, "");
+        String pkg = OpenOnStart.app(choices, openOnStartPreset);
         if (pkg.isEmpty()) return getString(R.string.off);
         try {
             PackageManager pm = getPackageManager();

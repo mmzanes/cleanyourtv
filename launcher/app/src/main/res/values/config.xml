@@ -53,6 +53,10 @@
          remote powers them into a light sleep with no boot. It opens over whatever was in front, an HDMI input
          included. Off by default; a theme can set "open_on_start_on_wake": true. -->
     <bool name="open_on_start_on_wake">false</bool>
+    <!-- With open_on_start_choice: the package Open on start opens until another app, or Off, is picked in Launcher
+         settings, so a set can open its app from the first boot with no setup on the TV. Empty, the default: none.
+         A theme can set "open_on_start_app": "com.example.app". -->
+    <string name="open_on_start_app" translatable="false"></string>
 
     <!-- Seconds the first Home after the TV starts waits for a working internet connection before it opens the
          boot_to_live_tv or Open on start app. A streaming app opened before the network is back shows an error,

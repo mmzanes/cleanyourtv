@@ -2,6 +2,7 @@ package com.gathin.tvhome;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -23,6 +24,17 @@ final class OpenOnStart {
      *  the launcher itself (which would only reopen Home). */
     static boolean due(int boot, int handledBoot, String pkg, String self) {
         return boot >= 0 && boot != handledBoot && pkg != null && !pkg.isEmpty() && !pkg.equals(self);
+    }
+
+    /** The app to open: the one picked in Launcher settings once a pick is stored (Off is stored as ""), else
+     *  open_on_start_app from config.xml or the theme. */
+    static String app(SharedPreferences choices, String preset) {
+        return choice(choices.contains(KEY), choices.getString(KEY, ""), preset);
+    }
+
+    static String choice(boolean picked, String stored, String preset) {
+        String s = picked ? stored : preset;
+        return s == null ? "" : s;
     }
 
     /** open_on_start_on_wake needs the Open on start row, which is where the app is picked. */

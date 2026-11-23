@@ -1,6 +1,7 @@
 package com.gathin.tvhome;
 
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -44,5 +45,22 @@ public class OpenOnStartTest {
         assertTrue(OpenOnStart.onWake(true, true));
         assertFalse(OpenOnStart.onWake(true, false));
         assertFalse(OpenOnStart.onWake(false, true));
+    }
+
+    @Test public void thePresetOpensUntilAnAppIsPicked() {
+        assertEquals("com.tid.enjoy", OpenOnStart.choice(false, "", "com.tid.enjoy"));
+    }
+
+    @Test public void aPickReplacesThePreset() {
+        assertEquals(YOUTUBE, OpenOnStart.choice(true, YOUTUBE, "com.tid.enjoy"));
+    }
+
+    @Test public void offPickedOverThePresetStaysOff() {
+        assertEquals("", OpenOnStart.choice(true, "", "com.tid.enjoy"));
+    }
+
+    @Test public void noPresetAndNoPickIsOff() {
+        assertEquals("", OpenOnStart.choice(false, "", ""));
+        assertEquals("", OpenOnStart.choice(false, "", null));
     }
 }
