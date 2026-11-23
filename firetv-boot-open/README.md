@@ -1,6 +1,6 @@
 # Abrir Vivo TV ao ligar (Fire TV)
 
-Um app pequeno que abre o Vivo TV (`com.tid.enjoy`) depois que o Fire TV liga. O Fire OS não deixa trocar a
+Um app pequeno que abre o Vivo TV (`com.tid.enjoy.firetv`, o nome na Amazon Appstore) depois que o Fire TV liga. O Fire OS não deixa trocar a
 tela inicial da Amazon, então este app não é um launcher: ele só coloca o Vivo TV na frente, uma vez por
 inicialização, depois que a rede conecta (ou após 2 minutos sem rede).
 
