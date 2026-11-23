@@ -12,6 +12,19 @@
          (adb shell appops set io.github.mmzanes.bootopen SYSTEM_ALERT_WINDOW allow), lets the boot job open it. -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+    <!-- Android 11+ package visibility: without these, getLaunchIntentForPackage returns null for every other app,
+         so the target looks "not found" even when it is installed. Any app with a TV or phone entry point. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="false"
         android:banner="@drawable/banner"
