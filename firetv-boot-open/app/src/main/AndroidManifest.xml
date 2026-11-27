@@ -6,7 +6,7 @@
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!-- Waits for the network before opening the app (JobScheduler network constraint). -->
+    <!-- Waits for the network before opening the app. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Android 10+ blocks activity starts from the background; this app-op, granted once over ADB
          (adb shell appops set io.github.mmzanes.bootopen SYSTEM_ALERT_WINDOW allow), lets the boot job open it. -->
@@ -49,12 +49,10 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!-- Same path as a boot, sent by hand to test without rebooting:
+                     adb shell am broadcast -a io.github.mmzanes.bootopen.TEST -n io.github.mmzanes.bootopen/.BootReceiver -->
+                <action android:name="io.github.mmzanes.bootopen.TEST" />
             </intent-filter>
         </receiver>
-
-        <service
-            android:name=".OpenJob"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 </manifest>

@@ -2,7 +2,8 @@
 
 Um app pequeno que abre o Vivo TV (`com.tid.enjoy.firetv`, o nome na Amazon Appstore) depois que o Fire TV liga. O Fire OS não deixa trocar a
 tela inicial da Amazon, então este app não é um launcher: ele só coloca o Vivo TV na frente, uma vez por
-inicialização, depois que a rede conecta (ou após 2 minutos sem rede).
+inicialização completa (tirar da tomada ou reiniciar; sair do modo de espera pelo controle não conta),
+depois que a rede conecta (ou após 45 segundos sem rede).
 
 Testado para: Fire TV Stick 4K 2ª geração (Fire OS 8, Android 11). Precisa de Android 8 ou mais novo.
 
@@ -33,6 +34,13 @@ adb shell am start -n io.github.mmzanes.bootopen/.MainActivity
 
 O último comando abre o Vivo TV na hora (teste) e tira o app do estado "parado", sem o qual o Android não
 entrega o aviso de inicialização. Depois reinicie: `adb reboot`.
+
+Para testar o caminho da inicialização sem reiniciar (aperte Home antes, o Vivo TV deve abrir em ~5 s):
+
+```sh
+adb shell am broadcast -a io.github.mmzanes.bootopen.TEST -n io.github.mmzanes.bootopen/.BootReceiver
+adb logcat -d -s BootOpen
+```
 
 Se o `grep` mostrar outro nome de pacote, troque `target_package` em `app/src/main/res/values/strings.xml`
 e compile de novo.
